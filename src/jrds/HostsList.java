@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -36,14 +35,6 @@ import org.apache.log4j.Level;
  */
 public class HostsList extends StarterNode {
 
-    public static final class Stats {
-        Stats() {
-            lastCollect = new Date(0);
-        }
-        public long runtime = 0;
-        public Date lastCollect;
-    }
-
     private final Set<HostInfo> hostList = new HashSet<HostInfo>();
     private final Map<String, jrds.starter.Timer> timers = new HashMap<String, jrds.starter.Timer>();
     private final Map<Integer, GraphNode> graphMap = new HashMap<Integer, GraphNode>();
@@ -60,7 +51,6 @@ public class HostsList extends StarterNode {
     private Set<String> defaultRoles = Collections.emptySet();
     // A global flag that tells globally that this HostsList can be used
     volatile private boolean started = false;
-    private Stats stats = new Stats();
     private Set<Class<? extends DiscoverAgent>> daList = new HashSet<Class<? extends DiscoverAgent>>();
 
     /**
@@ -446,13 +436,6 @@ public class HostsList extends StarterNode {
      */
     public Renderer getRenderer() {
         return renderer;
-    }
-
-    /**
-     * @return the stats
-     */
-    public Stats getStats() {
-        return stats;
     }
 
     /**

@@ -76,14 +76,20 @@ public class Timer extends StarterNode {
     public void startTimer(java.util.Timer collectTimer) {
         collector = new TimerTask () {
             public void run() {
-                try {
-                    Timer.this.collectAll();
-                } catch (RuntimeException e) {
-                    Timer.this.log(Level.FATAL,"A fatal error occured during collect: ", e);
-                }
+                Thread t = new Thread("collector-" + Timer.this.name) {
+                    @Override
+                    public void run() {
+                        try {
+                            Timer.this.collectAll();
+                        } catch (RuntimeException e) {
+                            Timer.this.log(Level.FATAL,"A fatal error occured during collect: ", e);
+                        }
+                    }                    
+                };
+                t.start();
             }
         };
-        collectTimer.schedule(collector, Timer.this.getTimeout() * 1000L, Timer.this.getStep() * 1000L);
+        collectTimer.scheduleAtFixedRate(collector, getTimeout() * 1000L, getStep() * 1000L);
     }
 
     public void collectAll() {
